@@ -10,11 +10,17 @@
 </head>
 <body>
 
-  <div class="theme-toggle" onclick="toggleTheme()">
-    <div class="slider"></div>
-    <span style="font-size:0.8rem;margin-left:4px;color:var(--text-muted);">D</span>
-    <span style="font-size:0.8rem;margin-left:28px;color:var(--text-muted);">H</span>
+<!-- THEME SWITCHER – oben rechts -->
+<div id="themeSwitcher">
+  <div class="theme-row">
+    <div class="theme-points">
+      <span data-mode="auto">Auto</span>
+      <span data-mode="light">Hell</span>
+      <span data-mode="dark">Dunkel</span>
+      <div class="theme-marker" id="themeMarker"></div>
+    </div>
   </div>
+</div>
 
   <nav class="sidebar">
     <div class="sidebar-header">FamHealth Hub</div>

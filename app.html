@@ -6,100 +6,136 @@
   <title>FamHealth Hub</title>
   <link rel="stylesheet" href="assets/css/global.css">
   <link rel="stylesheet" href="assets/css/app.css">
+  <link rel="stylesheet" href="assets/css/modal.css">
 </head>
 <body>
 
-  <!-- Seriöser Theme-Toggle -->
-  <!-- DEIN THEME SWITCHER -->
-   <div class="theme-row" id="themeRow">
+  <!-- THEME SWITCHER (oben rechts) -->
+  <div id="themeSwitcher">
+    <div class="theme-row">
       <div class="theme-points">
-         <span data-mode="auto">Auto</span>
-         <span data-mode="light">Hell</span>
-         <span data-mode="dark">Dunkel</span>
-         <div class="theme-marker" id="themeMarker"></div>
+        <span data-mode="auto">Auto</span>
+        <span data-mode="light">Hell</span>
+        <span data-mode="dark">Dunkel</span>
+        <div class="theme-marker" id="themeMarker"></div>
       </div>
-   </div>
+    </div>
+  </div>
 
   <!-- Sidebar -->
   <nav class="sidebar">
     <div class="sidebar-header">FamHealth Hub</div>
-    <div class="sidebar-item active">
-      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
-      Dashboard
-    </div>
-    <div class="sidebar-item">
-      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m-6 2h7a2 2 0 002-2V5a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-      Patienten
-    </div>
-    <div class="sidebar-item">
-      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1H3V6a1 1 0 011-1z"/></svg>
-      Vitals
-    </div>
-    <div class="sidebar-item">
-      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9 12h2v8H9V4z"/></svg>
-      Untersuchungen
-    </div>
-    <div class="sidebar-item">
-      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M4 4h12v12H4V4z"/></svg>
-      Arztbriefe
-    </div>
+    <div class="sidebar-item active">Dashboard</div>
+    <div class="sidebar-item">Patienten</div>
+    <div class="sidebar-item">Vitals</div>
+    <div class="sidebar-item">Untersuchungen</div>
+    <div class="sidebar-item">Dokumente</div>
   </nav>
 
-  <!-- Hauptbereich -->
   <main class="main">
-    <h1 class="page-title">Dashboard</h1>
-
-    <!-- Patienten -->
-    <h2 style="margin-bottom:1rem;">Patienten</h2>
-    <div class="patients-grid">
-      <div class="patient-card">
-        <div class="patient-avatar">L</div>
-        <div class="patient-info">
-          <h3>Lena</h3>
-          <p>8 Jahre · weiblich</p>
-          <p style="color:var(--text-muted);">Letzter Eintrag: heute 09:14</p>
-        </div>
-      </div>
-      <div class="patient-card">
-        <div class="patient-avatar">M</div>
-        <div class="patient-info">
-          <h3>Max</h3>
-          <p>5 Jahre · männlich</p>
-          <p>Letzter Eintrag: gestern</p>
-        </div>
-      </div>
-      <div class="patient-card">
-        <div class="patient-avatar">O</div>
-        <div class="patient-info">
-          <h3>Oma Hannelore</h3>
-          <p>82 Jahre · Hypertonie</p>
-          <p>RR heute 165/95</p>
-        </div>
-      </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+      <h1 class="page-title">Dashboard</h1>
+      <button id="new-patient-btn" style="padding:0.9rem 1.8rem;background:var(--primary);color:white;border:none;border-radius:8px;font-size:1.1rem;">
+        + Neuer Patient
+      </button>
     </div>
 
-    <!-- Letzte Vitals -->
-    <h2>Letzte Vitalwerte</h2>
-    <table class="vitals-table">
-      <thead>
-        <tr>
-          <th>Datum</th>
-          <th>Person</th>
-          <th>Temp</th>
-          <th>RR</th>
-          <th>Puls</th>
-          <th>Gewicht</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>05.12.2025 09:14</td><td>Lena</td><td>38,5 °C</td><td>110/70</td><td>112</td><td>28,4 kg</td></tr>
-        <tr><td>05.12.2025 08:30</td><td>Oma</td><td>36,7 °C</td><td>165/95</td><td>88</td><td>68,2 kg</td></tr>
-        <tr><td>04.12.2025 19:20</td><td>Max</td><td>37,1 °C</td><td>–</td><td>98</td><td>19,8 kg</td></tr>
-      </tbody>
-    </table>
+    <div class="patients-grid" id="patientsGrid">
+      <!-- wird per JS gefüllt -->
+    </div>
   </main>
 
+  <!-- MODAL: Neuer Patient -->
+  <div class="modal-backdrop" id="patientModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Neuen Patienten anlegen</div>
+        <button class="close-modal" id="closeModal">×</button>
+      </div>
+      <div class="form-group">
+        <label>Vor- und Nachname</label>
+        <input type="text" id="pName" required>
+      </div>
+      <div class="form-group">
+        <label>Geburtsdatum</label>
+        <input type="date" id="pGeburt" required>
+      </div>
+      <div class="form-group">
+        <label>Geschlecht</label>
+        <select id="pGeschlecht">
+          <option value="w">weiblich</option>
+          <option value="m">männlich</option>
+          <option value="d">divers</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Allergien / wichtige Hinweise</label>
+        <input type="text" id="pAllergien" placeholder="z. B. Penicillin">
+      </div>
+      <button id="savePatient" style="width:100%;padding:1rem;background:var(--primary);color:white;border:none;border-radius:8px;font-size:1.1rem;">
+        Patient anlegen
+      </button>
+    </div>
+  </div>
+
   <script src="assets/js/theme.js"></script>
+  <script src="assets/js/db.js"></script>
   <script src="assets/js/auth.js"></script>
+  <script>
+    // Modal öffnen/schließen
+    const modal = document.getElementById('patientModal');
+    document.getElementById('new-patient-btn').onclick = () => modal.classList.add('show');
+    document.getElementById('closeModal').onclick = () => modal.classList.remove('show');
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
+
+    // Patienten laden & anzeigen
+    async function loadPatients() {
+      const patients = await getAllPatients();
+      const grid = document.getElementById('patientsGrid');
+      grid.innerHTML = '';
+
+      patients.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'patient-card';
+        card.innerHTML = `
+          <div class="patient-avatar" style="background:${p.geschlecht==='w'?'#e91e63':'#2196f3'}">
+            ${p.name.split(' ').map(n=>n[0]).join('').toUpperCase()}
+          </div>
+          <div class="patient-info">
+            <h3>${p.name}</h3>
+            <p>${new Date(p.geburt).toLocaleDateString('de-DE')} · ${p.geschlecht==='w'?'w':'m'?'männlich':'divers'}</p>
+            <p class="muted">${p.allergien || 'keine Allergien'}</p>
+          </div>
+        `;
+        card.onclick = () => location.href = `patient.html?id=${p.id}`;
+        grid.appendChild(card);
+      });
+
+      // Beispiel-Patienten falls DB leer
+      if (patients.length === 0) {
+        grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:1.2rem;">
+          Noch keine Patienten – klick oben rechts auf „+ Neuer Patient“
+        </p>`;
+      }
+    }
+
+    // Patient speichern
+    document.getElementById('savePatient').onclick = async () => {
+      const patient = {
+        name: document.getElementById('pName').value.trim(),
+        geburt: document.getElementById('pGeburt').value,
+        geschlecht: document.getElementById('pGeschlecht').value,
+        allergien: document.getElementById('pAllergien').value.trim()
+      };
+      if (!patient.name || !patient.geburt) return alert("Bitte Name und Geburtstag angeben");
+
+      await addPatient(patient);
+      modal.classList.remove('show');
+      loadPatients();
+    };
+
+    // Start
+    loadPatients();
+  </script>
 </body>
 </html>

@@ -68,43 +68,54 @@ button, input, textarea {
 
 
 /* ========================
-   DEIN GEILER THEME SWITCHER
+   FINALER THEME-SWITCHER – PRAXIS-STYLE
    ======================== */
-.theme-row {
-  margin: 1.5rem 0;
-  max-width: 340px;
+#themeSwitcher {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
 }
+
+.theme-row {
+  width: 180px;
+}
+
 .theme-points {
   position: relative;
   display: flex;
-  justify-content: space-between;
-  background: var(--surface);
+  background: var(--surface2);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  height: 44px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
+
 .theme-points span {
   flex: 1;
-  text-align: center;
-  padding: 0.75rem 0;
-  cursor: pointer;
-  font-size: 0.95rem;
+  display: grid;
+  place-items: center;
+  font-size: 0.85rem;
   font-weight: 600;
-  user-select: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
   z-index: 2;
-  position: relative;
-  transition: color 0.3s;
 }
+
 .theme-points span.active {
   color: white;
 }
+
 .theme-marker {
   position: absolute;
-  inset: 0;
-  width: 33.333%;
-  background: linear-gradient(90deg, #00b8a9, #0074e4);
+  top: 4px;
+  left: 4px;
+  width: calc(33.333% - 8px);
+  height: calc(100% - 8px);
+  background: var(--primary);
+  border-radius: 6px;
   transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
   z-index: 1;
-  border-radius: 9px;
 }
