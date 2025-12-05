@@ -10,7 +10,7 @@
 .login-card {
   background: var(--surface);
   width: 100%;
-  max-width: 480px;
+  max-width: 650px;
   border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;

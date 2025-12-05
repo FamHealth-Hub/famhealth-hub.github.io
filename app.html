@@ -1,15 +1,116 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" data-theme="dark">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FamHealth Hub</title>
   <link rel="stylesheet" href="assets/css/global.css">
   <link rel="stylesheet" href="assets/css/app.css">
 </head>
 <body>
-  <h1 style="color:white; text-align:center; margin-top: 10rem;">
-    Willkommen, Doc! Du bist drin.
-  </h1>
-  <p style="text-align:center;">Phase 2 (Dashboard + Sidebar) kommt in 5 Minuten...</p>
+
+  <!-- Theme Toggle mit H/D -->
+  <div class="theme-toggle" onclick="toggleTheme()">
+    <div class="slider"></div>
+    <span style="font-size:0.8rem; margin-left:4px; color:var(--text-muted);">D</span>
+    <span style="font-size:0.8rem; margin-left:28px; color:var(--text-muted);">H</span>
+  </div>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-header">FamHealth Hub</div>
+    <div class="sidebar-item active">
+      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/></svg>
+      Dashboard
+    </div>
+    <div class="sidebar-item">
+      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m-6 2h7a2 2 0 002-2V5a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+      Patienten
+    </div>
+    <div class="sidebar-item">
+      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1H3V6a1 1 0 011-1z"/></svg>
+      Vitals
+    </div>
+    <div class="sidebar-item">
+      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M9 12h2v8H9V4z"/></svg>
+      Untersuchungen
+    </div>
+    <div class="sidebar-item">
+      <svg fill="currentColor" viewBox="0 0 20 20"><path d="M4 4h12v12H4V4z"/></svg>
+      Arztbriefe
+    </div>
+  </nav>
+
+  <!-- Hauptbereich -->
+  <main class="main">
+    <h1 class="page-title">Dashboard</h1>
+
+    <!-- Patienten -->
+    <h2 style="margin-bottom:1rem;">Patienten</h2>
+    <div class="patients-grid">
+      <div class="patient-card">
+        <div class="patient-avatar">L</div>
+        <div class="patient-info">
+          <h3>Lena</h3>
+          <p>8 Jahre · weiblich</p>
+          <p style="color:var(--text-muted);">Letzter Eintrag: heute 09:14</p>
+        </div>
+      </div>
+      <div class="patient-card">
+        <div class="patient-avatar">M</div>
+        <div class="patient-info">
+          <h3>Max</h3>
+          <p>5 Jahre · männlich</p>
+          <p>Letzter Eintrag: gestern</p>
+        </div>
+      </div>
+      <div class="patient-card">
+        <div class="patient-avatar">O</div>
+        <div class="patient-info">
+          <h3>Oma Hannelore</h3>
+          <p>82 Jahre · Hypertonie</p>
+          <p>RR heute 165/95</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Letzte Vitals -->
+    <h2>Letzte Vitalwerte</h2>
+    <table class="vitals-table">
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th>Person</th>
+          <th>Temp</th>
+          <th>RR</th>
+          <th>Puls</th>
+          <th>Gewicht</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>05.12.2025 09:14</td><td>Lena</td><td>38,5 °C</td><td>110/70</td><td>112</td><td>28,4 kg</td></tr>
+        <tr><td>05.12.2025 08:30</td><td>Oma</td><td>36,7 °C</td><td>165/95</td><td>88</td><td>68,2 kg</td></tr>
+        <tr><td>04.12.2025 19:20</td><td>Max</td><td>37,1 °C</td><td>–</td><td>98</td><td>19,8 kg</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    // Theme laden
+    const saved = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    }
+
+    // Falls jemand direkt auf app.html geht ohne PIN
+    if (!sessionStorage.getItem('unlocked')) {
+      window.location.href = 'index.html';
+    }
+  </script>
 </body>
 </html>
