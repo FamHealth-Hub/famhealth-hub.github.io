@@ -65,3 +65,46 @@ button, input, textarea {
 [data-theme="light"] .theme-toggle .sun { display: block; }
 [data-theme="light"] .theme-toggle .moon { display: none; }
 [data-theme="light"] .slider { transform: translateX(30px); }
+
+
+/* ========================
+   DEIN GEILER THEME SWITCHER
+   ======================== */
+.theme-row {
+  margin: 1.5rem 0;
+  max-width: 340px;
+}
+.theme-points {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.theme-points span {
+  flex: 1;
+  text-align: center;
+  padding: 0.75rem 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  user-select: none;
+  z-index: 2;
+  position: relative;
+  transition: color 0.3s;
+}
+.theme-points span.active {
+  color: white;
+}
+.theme-marker {
+  position: absolute;
+  inset: 0;
+  width: 33.333%;
+  background: linear-gradient(90deg, #00b8a9, #0074e4);
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  z-index: 1;
+  border-radius: 9px;
+}

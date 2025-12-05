@@ -9,12 +9,16 @@
 </head>
 <body>
 
-  <!-- Theme Toggle mit H/D -->
-  <div class="theme-toggle" onclick="toggleTheme()">
-    <div class="slider"></div>
-    <span style="font-size:0.8rem; margin-left:4px; color:var(--text-muted);">D</span>
-    <span style="font-size:0.8rem; margin-left:28px; color:var(--text-muted);">H</span>
-  </div>
+  <!-- Seriöser Theme-Toggle -->
+  <!-- DEIN THEME SWITCHER -->
+   <div class="theme-row" id="themeRow">
+      <div class="theme-points">
+         <span data-mode="auto">Auto</span>
+         <span data-mode="light">Hell</span>
+         <span data-mode="dark">Dunkel</span>
+         <div class="theme-marker" id="themeMarker"></div>
+      </div>
+   </div>
 
   <!-- Sidebar -->
   <nav class="sidebar">
@@ -95,22 +99,7 @@
     </table>
   </main>
 
-  <script>
-    // Theme laden
-    const saved = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', saved);
-
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-    }
-
-    // Falls jemand direkt auf app.html geht ohne PIN
-    if (!sessionStorage.getItem('unlocked')) {
-      window.location.href = 'index.html';
-    }
-  </script>
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/auth.js"></script>
 </body>
 </html>

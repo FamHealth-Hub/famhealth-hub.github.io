@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lena – Patientenakte | FamHealth Hub</title>
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- DEIN THEME SWITCHER (oben rechts) -->
+  <div style="position:fixed;top:20px;right:20px;z-index:1000;">
+    <div class="theme-row" id="themeRow">
+      <div class="theme-points">
+        <span data-mode="auto">Auto</span>
+        <span data-mode="light">Hell</span>
+        <span data-mode="dark">Dunkel</span>
+        <div class="theme-marker" id="themeMarker"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-header">FamHealth Hub</div>
+    <div class="sidebar-item" onclick="location.href='app.html'">Dashboard</div>
+    <div class="sidebar-item active">Patienten</div>
+    <div class="sidebar-item">Vitals</div>
+    <div class="sidebar-item">Untersuchungen</div>
+    <div class="sidebar-item">Arztbriefe</div>
+  </nav>
+
+  <main class="main">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+      <h1 class="page-title">Lena <span style="font-weight:400;font-size:1rem;color:var(--text-muted);">· 8 Jahre · w</span></h1>
+      <button id="new-exam-btn" style="padding:0.8rem 1.6rem;background:var(--primary);color:white;border:none;border-radius:6px;font-size:1.1rem;">
+        + Neue Untersuchung
+      </button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" style="border-bottom:1px solid var(--border);margin-bottom:2rem;display:flex;gap:2rem;">
+      <button class="tab active" data-tab="overview">Übersicht</button>
+      <button class="tab" data-tab="vitals">Vitals</button>
+      <button class="tab" data-tab="exams">Untersuchungen</button>
+      <button class="tab" data-tab="docs">Dokumente</button>
+    </div>
+
+    <!-- Tab-Inhalte -->
+    <div id="overview" class="tab-content">
+      <div style="background:var(--surface);padding:2rem;border-radius:8px;border:1px solid var(--border);">
+        <h2>Basisdaten</h2>
+        <p>Geburtsdatum: 12.03.2017 · Größe: 130 cm · Blutgruppe: A+<br>
+           Allergien: <strong>Penicillin</strong> · Dauermed.: keine</p>
+      </div>
+      <div style="margin-top:2rem;">
+        <canvas id="tempChart" height="120"></canvas>
+      </div>
+    </div>
+
+    <div id="vitals" class="tab-content hidden">
+      <table class="vitals-table" id="vitals-table">
+        <thead><tr><th>Datum</th><th>Temp</th><th>RR</th><th>Puls</th><th>Gewicht</th><th>Notiz</th></tr></thead>
+        <tbody></>
+      </table>
+    </div>
+
+    <div id="exams" class="tab-content hidden">
+      <p>Noch keine Untersuchungen gespeichert.</p>
+    </div>
+
+    <div id="docs" class="tab-content hidden">
+      <p>Noch keine PDFs vorhanden.</p>
+    </div>
+  </main>
+
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/js/db.js"></script>
+  <script>
+    // Schutz
+    if (!sessionStorage.getItem('unlocked')) location.href = 'index.html';
+
+    // Tabs
+    document.querySelectorAll('.tab').forEach(t => {
+      t.onclick = () => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(x => x.classList.add('hidden'));
+        t.classList.add('active');
+        document.getElementById(t.dataset.tab).classList.remove('hidden');
+      };
+    });
+
+    // Beispiel-Vitals (später aus DB)
+    const vitals = [
+      {date:"05.12.2025 09:14", temp:38.5, rr:"110/70", puls:112, gewicht:28.4, notiz:"Erkältung"},
+      {date:"04.12.2025 18:30", temp:37.8, rr:"108/68", puls:105, gewicht:28.3, notiz:""},
+      {date:"03.12.2025 08:10", temp:36.6, rr:"105/65", puls:92,  gewicht:28.2, notiz:""}
+    ];
+
+    // Tabelle füllen
+    const tbody = document.querySelector('#vitals-table tbody');
+    vitals.forEach(v => {
+      const tr = tbody.insertRow();
+      tr.innerHTML = `<td>${v.date}</td><td>${v.temp} °C</td><td>${v.rr}</td><td>${v.puls}</td><td>${v.gewicht} kg</td><td>${v.notiz}</td>`;
+    });
+
+    // Chart
+    new Chart(document.getElementById('tempChart'), {
+      type: 'line',
+      data: {
+        labels: vitals.map(v => v.date.split(' ')[0]),
+        datasets: [{ label:'Temperatur °C', data: vitals.map(v => v.temp), borderColor:'#00b4b4', tension:0.3, fill:false }]
+      },
+      options: { plugins:{legend:{display:false}}, scales:{y:{suggestedMin:35, suggestedMax:40}} }
+    });
+
+    // Neue Untersuchung
+    document.getElementById('new-exam-btn').onclick = () => {
+      window.location.href = 'exam-erkältung.html';
+    };
+  </script>
+</body>
+</html>

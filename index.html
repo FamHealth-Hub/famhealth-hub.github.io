@@ -10,9 +10,15 @@
 <body class="login-body">
 
   <!-- Seriöser Theme-Toggle -->
-  <div class="theme-toggle" onclick="toggleTheme()">
-    <div class="slider"></div>
-  </div>
+  <!-- DEIN THEME SWITCHER -->
+   <div class="theme-row" id="themeRow">
+      <div class="theme-points">
+         <span data-mode="auto">Auto</span>
+         <span data-mode="light">Hell</span>
+         <span data-mode="dark">Dunkel</span>
+         <div class="theme-marker" id="themeMarker"></div>
+      </div>
+   </div>
 
   <div class="login-card">
     <div class="login-header">
@@ -39,40 +45,6 @@
   </div>
 
   <script src="assets/js/auth.js"></script>
-  <script>
-    // Theme laden
-    const saved = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', saved);
-
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'light' ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-    }
-
-    // PIN-Felder automatisch weiterleiten
-    document.querySelectorAll('.pin-digit').forEach((input, idx, arr) => {
-      input.addEventListener('input', () => {
-        if (input.value && idx < arr.length-1) arr[idx+1].focus();
-      });
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Backspace' && !input.value && idx > 0) arr[idx-1].focus();
-      });
-    });
-
-    // Login bei letztem Feld Enter oder Button
-    document.getElementById('login-btn').addEventListener('click', () => {
-      const pins = Array.from(document.querySelectorAll('.pin-digit')).map(i => i.value).join('');
-      if (pins === auth.CORRECT_PIN) {
-        sessionStorage.setItem('unlocked', 'true');
-        window.location.href = 'app.html';
-      } else {
-        document.getElementById('error-msg').textContent = 'Falsche PIN';
-        document.querySelectorAll('.pin-digit').forEach(i => i.value = '');
-        document.querySelectorAll('.pin-digit')[0].focus();
-      }
-    });
-  </script>
+  <script src="assets/js/theme.js"></script>
 </body>
 </html>
