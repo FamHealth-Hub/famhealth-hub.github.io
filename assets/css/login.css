@@ -1,58 +1,60 @@
 .login-body {
   min-height: 100vh;
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
   padding: 2rem;
-}
-
-.login-container {
-  width: 100%;
-  max-width: 560px;
 }
 
 .login-card {
   background: var(--surface);
-  padding: 4rem 3rem;
-  border-radius: 24px;
-  box-shadow: 0 32px 64px rgba(0,0,0,0.4);
-  text-align: center;
-  border: 1px solid var(--border);
-  position: relative;
-}
-
-.login-card h1 {
-  font-size: 3.2rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
-  color: var(--primary);
-  letter-spacing: -1px;
-}
-
-.login-card .subtitle {
-  font-size: 1.3rem;
-  color: var(--text-muted);
-  margin-bottom: 3rem;
-}
-
-.login-card input[type="password"] {
   width: 100%;
-  padding: 1.4rem;
-  margin: 1.5rem 0;
-  font-size: 2.8rem;
+  max-width: 480px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+
+.login-header {
+  background: var(--primary);
+  color: white;
+  padding: 2rem 2.5rem;
   text-align: center;
-  letter-spacing: 0.8rem;
-  background: var(--surface2);
-  border: 3px solid var(--border);
-  border-radius: 16px;
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.login-content {
+  padding: 3rem 2.5rem 4rem;
+}
+
+.login-content h2 {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  font-weight: 500;
   color: var(--text);
 }
 
-.login-card input:focus {
-  border-color: var(--primary);
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(0,180,180,0.2);
+.pin-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.pin-digit {
+  width: 64px;
+  height: 80px;
+  font-size: 3rem;
+  text-align: center;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-weight: 600;
 }
 
 #login-btn {
@@ -60,20 +62,49 @@
   padding: 1.4rem;
   background: var(--primary);
   color: white;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  border-radius: 16px;
-  margin-top: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 #login-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0,180,180,0.3);
+  background: #009a9a;
 }
 
-.error { 
-  color: var(--red); 
-  margin-top: 1.5rem; 
-  font-weight: 600;
-  font-size: 1.2rem;
+.error {
+  text-align: center;
+  color: var(--red);
+  margin-top: 1.5rem;
+  font-weight: 500;
+}
+
+/* Theme Toggle – jetzt seriös oben rechts */
+.theme-toggle {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 56px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.theme-toggle .slider {
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  border-radius: 4px;
+  transition: transform 0.25s;
+}
+
+[data-theme="light"] .theme-toggle .slider {
+  transform: translateX(24px);
 }

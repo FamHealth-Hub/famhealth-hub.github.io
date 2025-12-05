@@ -1,51 +1,77 @@
 <!DOCTYPE html>
 <html lang="de" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FamHealth Hub</title>
   <link rel="stylesheet" href="assets/css/global.css">
   <link rel="stylesheet" href="assets/css/login.css">
-  <link rel="manifest" href="manifest.json">
 </head>
 <body class="login-body">
 
-  <!-- Theme Toggle -->
+  <!-- Seriöser Theme-Toggle -->
   <div class="theme-toggle" onclick="toggleTheme()">
     <div class="slider"></div>
-    <span class="sun">Sun</span>
-    <span class="moon">Moon</span>
   </div>
 
-  <div class="login-container">
-    <div class="login-card">
-      <h1>FamHealth Hub</h1>
-      <p class="subtitle">Dein internes Arztcockpit</p>
+  <div class="login-card">
+    <div class="login-header">
+      FamHealth Hub
+    </div>
+    <div class="login-content">
+      <h2>Anmeldung</h2>
+      <p style="text-align:center; color:var(--text-muted); margin-bottom:2rem;">
+        Internes Arztcockpit · PIN erforderlich
+      </p>
 
-      <input type="password" id="pin-input" maxlength="6" inputmode="numeric" 
-             placeholder="••••••" autofocus autocomplete="off">
-      <button id="login-btn">Entsperren →</button>
+      <div class="pin-wrapper">
+        <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+        <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+        <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+        <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+        <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+        <input type="password" class="pin-digit" maxlength="1" inputmode="numeric">
+      </div>
+
+      <button id="login-btn">Entsperren</button>
       <p class="error" id="error-msg"></p>
     </div>
   </div>
 
   <script src="assets/js/auth.js"></script>
   <script>
-    // Theme aus localStorage laden oder dark als default
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    // Theme laden
+    const saved = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
 
     function toggleTheme() {
       const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'light' ? 'light' : 'dark';
+      const next = current === 'light' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
     }
 
-    // Login-Logik
-    document.getElementById('login-btn').addEventListener('click', () => auth.login());
-    document.getElementById('pin-input').addEventListener('keypress', e => {
-      if (e.key === 'Enter') auth.login();
+    // PIN-Felder automatisch weiterleiten
+    document.querySelectorAll('.pin-digit').forEach((input, idx, arr) => {
+      input.addEventListener('input', () => {
+        if (input.value && idx < arr.length-1) arr[idx+1].focus();
+      });
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !input.value && idx > 0) arr[idx-1].focus();
+      });
+    });
+
+    // Login bei letztem Feld Enter oder Button
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const pins = Array.from(document.querySelectorAll('.pin-digit')).map(i => i.value).join('');
+      if (pins === auth.CORRECT_PIN) {
+        sessionStorage.setItem('unlocked', 'true');
+        window.location.href = 'app.html';
+      } else {
+        document.getElementById('error-msg').textContent = 'Falsche PIN';
+        document.querySelectorAll('.pin-digit').forEach(i => i.value = '');
+        document.querySelectorAll('.pin-digit')[0].focus();
+      }
     });
   </script>
 </body>
