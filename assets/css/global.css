@@ -1,7 +1,8 @@
-/* Global Dark Medical Theme */
+/* ==== LIGHT & DARK MODE ==== */
 :root {
   --bg: #0d1117;
   --surface: #161b22;
+  --surface2: #21262d;
   --text: #e6edf3;
   --text-muted: #8b949e;
   --primary: #00b4b4;
@@ -9,18 +10,58 @@
   --border: #30363d;
 }
 
-* { box-sizing: border-box; margin:0; padding:0; }
-body { 
-  font-family: 'Inter', system-ui, sans-serif; 
-  background: var(--bg); 
-  color: var(--text); 
-  min-height: 100vh;
+/* Light Mode */
+[data-theme="light"] {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface2: #e1e4e8;
+  --text: #24292f;
+  --text-muted: #57606a;
+  --primary: #00a0a0;
+  --red: #cf222e;
+  --border: #d0d7de;
 }
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
+
+* { box-sizing: border-box; margin:0; padding:0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+button, input, textarea {
+  font-family: inherit;
   transition: all 0.2s;
 }
-.hidden { display: none !important; }
+
+/* Toggle Switch */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 30px;
+  width: 64px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  cursor: pointer;
+}
+.theme-toggle .slider {
+  width: 26px;
+  height: 26px;
+  background: var(--primary);
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+.theme-toggle .sun { display: none; }
+.theme-toggle .moon { display: block; }
+[data-theme="light"] .theme-toggle .sun { display: block; }
+[data-theme="light"] .theme-toggle .moon { display: none; }
+[data-theme="light"] .slider { transform: translateX(30px); }
