@@ -10,15 +10,13 @@
 </head>
 <body>
 
-  <!-- THEME SWITCHER (oben rechts) -->
+  <!-- THEME SWITCHER – perfekt oben rechts -->
   <div id="themeSwitcher">
-    <div class="theme-row">
-      <div class="theme-points">
-        <span data-mode="auto">Auto</span>
-        <span data-mode="light">Hell</span>
-        <span data-mode="dark">Dunkel</span>
-        <div class="theme-marker" id="themeMarker"></div>
-      </div>
+    <div class="theme-points">
+      <span data-mode="auto">Auto</span>
+      <span data-mode="light">Hell</span>
+      <span data-mode="dark">Dunkel</span>
+      <div class="theme-marker" id="themeMarker"></div>
     </div>
   </div>
 
@@ -26,39 +24,35 @@
   <nav class="sidebar">
     <div class="sidebar-header">FamHealth Hub</div>
     <div class="sidebar-item active">Dashboard</div>
-    <div class="sidebar-item">Patienten</div>
-    <div class="sidebar-item">Vitals</div>
-    <div class="sidebar-item">Untersuchungen</div>
-    <div class="sidebar-item">Dokumente</div>
   </nav>
 
   <main class="main">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
       <h1 class="page-title">Dashboard</h1>
-      <button id="new-patient-btn" style="padding:0.9rem 1.8rem;background:var(--primary);color:white;border:none;border-radius:8px;font-size:1.1rem;">
-        + Neuer Patient
-      </button>
+      <button id="new-patient-btn">+ Neuer Patient</button>
     </div>
 
     <div class="patients-grid" id="patientsGrid">
-      <!-- wird per JS gefüllt -->
+      <p style="color:var(--text-muted);text-align:center;width:100%;margin-top:3rem;">
+        Lade Patienten…
+      </p>
     </div>
   </main>
 
-  <!-- MODAL: Neuer Patient -->
+  <!-- MODAL -->
   <div class="modal-backdrop" id="patientModal">
     <div class="modal">
       <div class="modal-header">
-        <div class="modal-title">Neuen Patienten anlegen</div>
-        <button class="close-modal" id="closeModal">×</button>
+        <div class="modal-title">Neuer Patient</div>
+        <button class="close-modal">×</button>
       </div>
       <div class="form-group">
-        <label>Vor- und Nachname</label>
-        <input type="text" id="pName" required>
+        <label>Name</label>
+        <input type="text" id="pName" placeholder="z. B. Lena Müller">
       </div>
       <div class="form-group">
         <label>Geburtsdatum</label>
-        <input type="date" id="pGeburt" required>
+        <input type="date" id="pGeburt">
       </div>
       <div class="form-group">
         <label>Geschlecht</label>
@@ -69,11 +63,11 @@
         </select>
       </div>
       <div class="form-group">
-        <label>Allergien / wichtige Hinweise</label>
+        <label>Allergien / Hinweise</label>
         <input type="text" id="pAllergien" placeholder="z. B. Penicillin">
       </div>
-      <button id="savePatient" style="width:100%;padding:1rem;background:var(--primary);color:white;border:none;border-radius:8px;font-size:1.1rem;">
-        Patient anlegen
+      <button id="savePatient" style="width:100%;padding:1rem;background:var(--primary);color:white;border:none;border-radius:8px;">
+        Speichern
       </button>
     </div>
   </div>
@@ -82,60 +76,61 @@
   <script src="assets/js/db.js"></script>
   <script src="assets/js/auth.js"></script>
   <script>
-    // Modal öffnen/schließen
+    // Modal
     const modal = document.getElementById('patientModal');
     document.getElementById('new-patient-btn').onclick = () => modal.classList.add('show');
-    document.getElementById('closeModal').onclick = () => modal.classList.remove('show');
-    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
+    modal.querySelector('.close-modal').onclick = () => modal.classList.remove('show');
+    modal.onclick = e => { if (e.target === modal) modal.classList.remove('show'); };
 
-    // Patienten laden & anzeigen
-    async function loadPatients() {
-      const patients = await getAllPatients();
+    // Patienten laden
+    async function renderPatients(patients) {
       const grid = document.getElementById('patientsGrid');
       grid.innerHTML = '';
 
+      if (patients.length === 0) {
+        grid.innerHTML = `<p style="color:var(--text-muted);text-align:center;width:100%;">Noch keine Patienten angelegt</p>`;
+        return;
+      }
+
       patients.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'patient-card';
-        card.innerHTML = `
+        const div = document.createElement('div');
+        div.className = 'patient-card';
+        div.innerHTML = `
           <div class="patient-avatar" style="background:${p.geschlecht==='w'?'#e91e63':'#2196f3'}">
-            ${p.name.split(' ').map(n=>n[0]).join('').toUpperCase()}
+            ${p.name.split(' ').map(n => n[0]).join('').toUpperCase()}
           </div>
           <div class="patient-info">
             <h3>${p.name}</h3>
-            <p>${new Date(p.geburt).toLocaleDateString('de-DE')} · ${p.geschlecht==='w'?'w':'m'?'männlich':'divers'}</p>
-            <p class="muted">${p.allergien || 'keine Allergien'}</p>
+            <p>${new Date(p.geburt).toLocaleDateString('de-DE')} · ${p.geschlecht==='w'?'weiblich':p.geschlecht==='m'?'männlich':'divers'}</p>
+            <p class="muted">${p.allergien || 'keine bekannten Allergien'}</p>
           </div>
         `;
-        card.onclick = () => location.href = `patient.html?id=${p.id}`;
-        grid.appendChild(card);
+        div.onclick = () => location.href = `patient.html?id=${p.id}`;
+        grid.appendChild(div);
       });
-
-      // Beispiel-Patienten falls DB leer
-      if (patients.length === 0) {
-        grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:1.2rem;">
-          Noch keine Patienten – klick oben rechts auf „+ Neuer Patient“
-        </p>`;
-      }
     }
 
     // Patient speichern
     document.getElementById('savePatient').onclick = async () => {
-      const patient = {
+      const p = {
         name: document.getElementById('pName').value.trim(),
         geburt: document.getElementById('pGeburt').value,
         geschlecht: document.getElementById('pGeschlecht').value,
-        allergien: document.getElementById('pAllergien').value.trim()
+        allergien: document.getElementById('pAllergien').value.trim() || null
       };
-      if (!patient.name || !patient.geburt) return alert("Bitte Name und Geburtstag angeben");
+      if (!p.name || !p.geburt) return alert("Name und Geburtstag erforderlich");
 
-      await addPatient(patient);
+      await addPatient(p);
       modal.classList.remove('show');
-      loadPatients();
+      const all = await getAllPatients();
+      renderPatients(all);
     };
 
     // Start
-    loadPatients();
+    (async () => {
+      const patients = await getAllPatients();
+      renderPatients(patients);
+    })();
   </script>
 </body>
 </html>

@@ -1,39 +1,44 @@
-// assets/js/db.js
+// assets/js/db.js – 100% sicher
 const DB_NAME = "FamHealthHub";
-const DB_VERSION = 2;
-let db;
+const DB_VERSION = 3;
+let dbPromise;
 
-const initDB = () => new Promise((resolve, reject) => {
-  const req = indexedDB.open(DB_NAME, DB_VERSION);
+const openDB = () => {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
 
-  req.onupgradeneeded = e => {
-    db = e.target.result;
-    db.createObjectStore("patients", { keyPath: "id", autoIncrement: true });
-    db.createObjectStore("vitals",   { keyPath: "id", autoIncrement: true });
-    db.createObjectStore("exams",    { keyPath: "id", autoIncrement: true });
-  };
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('patients')) db.createObjectStore('patients', { keyPath: 'id', autoIncrement: true });
+      if (!db.objectStoreNames.contains('vitals'))   db.createObjectStore('vitals',   { keyPath: 'id', autoIncrement: true });
+      if (!db.objectStoreNames.contains('exams'))    db.createObjectStore('exams',    { keyPath: 'id', autoIncrement: true });
+    };
 
-  req.onsuccess = () => { db = req.result; resolve(db); };
-  req.onerror = () => reject(req.error);
-});
-
-const getStore = (name, mode = "readonly") => {
-  const tx = db.transaction(name, mode);
-  return tx.objectStore(name);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
 };
 
-// Patienten
-const getAllPatients = () => new Promise(res => {
-  const store = getStore("patients");
-  const req = store.getAll();
-  req.onsuccess = () => res(req.result);
+dbPromise = openDB();
+
+// Helfer
+const getAll = storeName => dbPromise.then(db => {
+  return new Promise(res => {
+    const tx = db.transaction(storeName);
+    const store = tx.objectStore(storeName);
+    const req = store.getAll();
+    req.onsuccess = () => res(req.result);
+  });
 });
 
-const addPatient = patient => new Promise(res => {
-  const store = getStore("patients", "readwrite");
-  const req = store.add(patient);
-  req.onsuccess = () => res(req.result);
+const add = (storeName, data) => dbPromise.then(db => {
+  return new Promise(res => {
+    const tx = db.transaction(storeName, 'readwrite');
+    const store = tx.objectStore(storeName);
+    const req = store.add(data);
+    req.onsuccess = () => res(req.result);
+  });
 });
 
-// Vitals & Exams kommen in Phase 5/6
-initDB();
+const getAllPatients = () => getAll('patients');
+const addPatient = patient => add('patients', patient);
