@@ -201,7 +201,7 @@ body.dark .sidebar header .toggle{
     color: var(--body-color);
 }
 
-.sidebar li a .active {
+.sidebar li a .nav-link .active {
     background: var(--primary-color);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
